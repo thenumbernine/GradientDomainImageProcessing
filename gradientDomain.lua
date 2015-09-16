@@ -12,7 +12,7 @@ local Image = require 'image'
 
 local image = Image'source.png':setFormat'double':rgb()
 
-local extendedBorder = 2
+local extendedBorder = 1
 --[[
 local copyArgs = {x=490, y=100, width=400, height=200}
 local pasteArgs = {x=337, y=271}
