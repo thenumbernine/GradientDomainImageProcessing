@@ -1,0 +1,5 @@
+Image Processing
+
+deblur.lua = runs the inverse of a guassian blur filter
+
+gradientDomain.lua = runs a graidnet-domain image processing example by pasting the gradient of one portion of an image onto another portion, then reconstructing the image from the new gradient's divergence
