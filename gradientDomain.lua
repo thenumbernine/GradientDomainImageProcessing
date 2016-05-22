@@ -91,8 +91,8 @@ local restoredCropped = imageDivCopyCroppedExt:solveConjugateResidual{
 			:paste{x=0, y=0, image=image:copy{x=0,y=0,width=extendedBorder,height=image.height}}
 			:paste{x=image.width-extendedBorder, y=0, image=image:copy{x=image.width-extendedBorder,y=0,width=extendedBorder,height=image.height}}
 	end,
-	--maxiter = 100,
-	epsilon = 1e-5,
+	maxiter = imageDivCopyCroppedExt.width * imageDivCopyCroppedExt.height * imageDivCopyCroppedExt.channels,
+	epsilon = 1e-15,
 }
 local restored = image:paste{x=extendedPasteArgs.x, y=extendedPasteArgs.y, image=restoredCropped}
 restored:save'modified-restored.png'
