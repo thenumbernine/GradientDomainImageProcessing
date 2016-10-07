@@ -29,7 +29,7 @@ blur:solveConjugateGradient{
 	epsilon = 1e-15,
 }:save'lua-blurred-unblurred-cg.png'
 --]]
--- [[
+--[[
 blur:solveConjugateResidual{
 	A = blurOp,
 	--x0 = blur,		-- cheat: use the original as the initial guess
@@ -37,7 +37,7 @@ blur:solveConjugateResidual{
 	epsilon = 1e-15,
 }:save'lua-blurred-unblurred-cr.png'
 --]]
---[[	lua not enough memory.  probably because i'm using lua arrays for the 2d arrays instead of something more dense
+-- [[	lua not enough memory.  probably because i'm using lua arrays for the 2d arrays instead of something more dense
 blur:solveGMRes{
 	A = blurOp,
 	--x0 = blur,		-- cheat: use the original as the initial guess
