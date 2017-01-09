@@ -41,8 +41,8 @@ blur:solveConjugateResidual{
 blur:solveGMRes{
 	A = blurOp,
 	--x0 = blur,		-- cheat: use the original as the initial guess
-	maxiter = 100,		--blur.width * blur.height * blur.channels,
-	restart = 100,
-	epsilon = 1e-15,
+	maxiter = blur.width * blur.height * blur.channels,
+	restart = 10,
+	epsilon = 1e-10,
 }:save'lua-blurred-unblurred-gmres.png'
 --]]

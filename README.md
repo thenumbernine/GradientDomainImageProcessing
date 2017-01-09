@@ -29,3 +29,6 @@ unblurred with Matlab:
 
 gradient-domain copy-and-paste in Lua:
 ![](https://cdn.rawgit.com/thenumbernine/ImageProcessing/master/modified-restored.png)
+
+TODO
+get deblur.lua GMRes working.  right now it's sooo slooow because it is reallocating images every iteration.  try using the OpenCL in-place version of the solvers.
