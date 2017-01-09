@@ -15,8 +15,11 @@ original:
 blurred with Lua:
 ![](https://cdn.rawgit.com/thenumbernine/ImageProcessing/master/lua-blurred.png)
 
-unblurred using a conjugate-gradient iterative solver:
+unblurred using a conjugate-gradient iterative solver in Lua:
 ![](https://cdn.rawgit.com/thenumbernine/ImageProcessing/master/lua-blurred-unblurred-cg.png)
+
+unblurred using a conjugate-residual iterative solver in Lua:
+![](https://cdn.rawgit.com/thenumbernine/ImageProcessing/master/lua-blurred-unblurred-cr.png)
 
 blurred with Matlab:
 ![](https://cdn.rawgit.com/thenumbernine/ImageProcessing/master/matlab-blurred.png)
