@@ -21,26 +21,26 @@ blur:save'lua-blurred.png'
 -- now perform the inverse operation ...
 -- i.e. if the kernel was a linear filter applied to the image: A x = b
 -- solve the linear problem: x = A^-1 b
---[[
-blur:solveConjugateGradient{
+-- [[
+blur:solveConjGrad{
 	A = blurOp,
-	--x0 = blur,		-- cheat: use the original as the initial guess
+	--x = blur,		-- cheat: use the original as the initial guess
 	maxiter = 100,--blur.width * blur.height * blur.channels,
 	epsilon = 1e-15,
 }:save'lua-blurred-unblurred-cg.png'
 --]]
---[[
-blur:solveConjugateResidual{
+-- [[
+blur:solveConjRes{
 	A = blurOp,
-	--x0 = blur,		-- cheat: use the original as the initial guess
+	--x = blur,		-- cheat: use the original as the initial guess
 	maxiter = 100,--blur.width * blur.height * blur.channels,
 	epsilon = 1e-15,
 }:save'lua-blurred-unblurred-cr.png'
 --]]
--- [[	lua not enough memory.  probably because i'm using lua arrays for the 2d arrays instead of something more dense
+--[[	lua not enough memory.  probably because i'm using lua arrays for the 2d arrays instead of something more dense
 blur:solveGMRes{
 	A = blurOp,
-	--x0 = blur,		-- cheat: use the original as the initial guess
+	--x = blur,		-- cheat: use the original as the initial guess
 	maxiter = blur.width * blur.height * blur.channels,
 	restart = 10,
 	epsilon = 1e-10,

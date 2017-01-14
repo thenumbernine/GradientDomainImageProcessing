@@ -80,8 +80,8 @@ restoredCroppedInitialGuess = restoredCroppedInitialGuess:paste{
 --]]
 
 -- 'self' is the initial guess, A is the operator ...
-local restoredCropped = imageDivCopyCroppedExt:solveConjugateResidual{
-	x0 = restoredCroppedInitialGuess,
+local restoredCropped = imageDivCopyCroppedExt:solveConjGrad{
+	x = restoredCroppedInitialGuess,
 	-- the linear operator to invert is the discrete laplacian (divergence) ...
 	A = function(image)
 		return image:divergence()
