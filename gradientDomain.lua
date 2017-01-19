@@ -107,8 +107,7 @@ local bufferCPU = imageDivCopyCroppedExt:setFormat(env.real)
 local _3xwidth = env:domain{size={env.base.size.x*3, env.base.size.y}}	-- don't bother with rgb dense structures, just make the size 3x wider
 local imageDivCopyCroppedExtGPU = _3xwidth:buffer{type='real', data=bufferCPU.buffer}
 local restoreCroppedGPU = _3xwidth:buffer{data=bufferCPU.buffer}
-print('cropped size',imageDivCopyCroppedExt.width, imageDivCopyCroppedExt.height)
-require 'solver.cl.conjgrad'{
+require 'solver.cl.conjres'{
 	env = env,
 	size = _3xwidth.volume,	-- used for vector operations 
 	x = restoreCroppedGPU,
