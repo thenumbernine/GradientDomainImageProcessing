@@ -3,7 +3,8 @@ local Image = require 'image'
 
 local image = Image'source.png':setFormat'double'
 
-local size = 20
+--local size = 20	-- 20 is crashing ... out of memory or something?
+local size = 2
 local sigma = size/3
 local blurKernelX = Image.gaussianKernel(sigma, 2*size+1, 1)
 local blurKernelY = blurKernelX:transpose()
@@ -27,6 +28,9 @@ blur:solveConjGrad{
 	--x = blur,		-- cheat: use the original as the initial guess
 	maxiter = 100,--blur.width * blur.height * blur.channels,
 	epsilon = 1e-15,
+	errorCallback = function(err, iter)
+		io.stderr:write(iter,'\t',err,'\n')
+	end,
 }:save'lua-blurred-unblurred-cg.png'
 --]]
 -- [[
@@ -35,6 +39,9 @@ blur:solveConjRes{
 	--x = blur,		-- cheat: use the original as the initial guess
 	maxiter = 100,--blur.width * blur.height * blur.channels,
 	epsilon = 1e-15,
+	errorCallback = function(err, iter)
+		io.stderr:write(iter,'\t',err,'\n')
+	end,
 }:save'lua-blurred-unblurred-cr.png'
 --]]
 --[[	lua not enough memory.  probably because i'm using lua arrays for the 2d arrays instead of something more dense
@@ -44,5 +51,8 @@ blur:solveGMRes{
 	maxiter = blur.width * blur.height * blur.channels,
 	restart = 10,
 	epsilon = 1e-10,
+	errorCallback = function(err, iter)
+		io.stderr:write(iter,'\t',err,'\n')
+	end,
 }:save'lua-blurred-unblurred-gmres.png'
 --]]
