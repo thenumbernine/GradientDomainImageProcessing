@@ -101,34 +101,31 @@ local restoredCropped = imageDivCopyCroppedExt:solveConjGrad{
 --]]
 -- [=[ solve conjgrad on the gpu
 local env = require 'cl.obj.env'{
-	size = {imageDivCopyCroppedExt.width, imageDivCopyCroppedExt.height},
+	precision = 'double',
+	--precision = 'float',
+	-- don't bother with rgb dense structures, just make the size 3x wider
+	size = {3*imageDivCopyCroppedExt.width, imageDivCopyCroppedExt.height},
 }
-local bufferCPU = imageDivCopyCroppedExt:setFormat(env.real)
-local _3xwidth = env:domain{size={env.base.size.x*3, env.base.size.y}}	-- don't bother with rgb dense structures, just make the size 3x wider
-local imageDivCopyCroppedExtGPU = _3xwidth:buffer{type='real', data=bufferCPU.buffer}
-local restoreCroppedGPU = _3xwidth:buffer{data=bufferCPU.buffer}
+local bufferCPU = imageDivCopyCroppedExt:rgb():setFormat(env.real)
+local imageDivCopyCroppedExtGPU = env:buffer{type='real', data=bufferCPU.buffer}
+local restoreCroppedGPU = env:buffer{data=bufferCPU.buffer}
 require 'solver.cl.conjres'{
 	env = env,
-	size = _3xwidth.volume,	-- used for vector operations 
 	x = restoreCroppedGPU,
 	b = imageDivCopyCroppedExtGPU,
 	A = env:kernel{
 		argsOut = {{name='y', type='real', obj=true}},
 		argsIn = {{name='x', type='real', obj=true}},
 		body = require 'template'[[
-	if (i.x == 0 || i.x == size.x-1 ||
+	if (i.x <= 2 || i.x >= size.x-3 ||
 		i.y == 0 || i.y == size.y-1) {
-		<? for j=0,2 do ?>
-			y[<?=j?>+3*index] = x[<?=j?>+3*index];
-		<? end ?>
+		y[index] = x[index];
 	} else {
-		<? for j=0,2 do ?>
-		y[<?=j?>+3*index] = x[<?=j?>+3*(index - stepsize.x)]
-			+ x[<?=j?>+3*(index + stepsize.x)]
-			+ x[<?=j?>+3*(index - stepsize.y)]
-			+ x[<?=j?>+3*(index + stepsize.y)]
-			- 4 * x[<?=j?>+3*index];
-		<? end ?>
+		y[index] = x[index - 3]
+			+ x[index + 3]
+			+ x[index - stepsize.y]
+			+ x[index + stepsize.y]
+			- (real)4 * x[index];
 	}
 ]],
 	},
@@ -140,7 +137,7 @@ require 'solver.cl.conjres'{
 local restoredCropped = imageDivCopyCroppedExt:clone()
 restoredCropped:setFormat(env.real)
 local ffi = require 'ffi'
-ffi.copy(restoredCropped.buffer, restoreCroppedGPU:toCPU(), 3 * env.base.volume * ffi.sizeof(env.real))
+ffi.copy(restoredCropped.buffer, restoreCroppedGPU:toCPU(), env.base.volume * ffi.sizeof(env.real))
 restoredCropped:setFormat'double'
 --]=]
 local restored = image:paste{x=extendedPasteArgs.x, y=extendedPasteArgs.y, image=restoredCropped}
